@@ -1,6 +1,12 @@
 import subprocess
 import sys
 from pathlib import Path
+import os
+
+BASE = Path(__file__).resolve().parents[2]   # /.../src
+
+env = os.environ.copy()
+env["PYTHONPATH"] = str(BASE)
 
 steps = [
     "00_clean_address.py",
@@ -13,8 +19,7 @@ steps = [
 BASE_DIR = Path(__file__).resolve().parent
 
 for step in steps:
-    print(f"Running: {step}")
     script_path = BASE_DIR / step
-    subprocess.run([sys.executable, str(script_path)], check=True)
+    subprocess.run([sys.executable, str(script_path)], check=True, env=env)
 
-print("=== POI preprocessing finished successfully ===")
+print("POI preprocessing complete.")

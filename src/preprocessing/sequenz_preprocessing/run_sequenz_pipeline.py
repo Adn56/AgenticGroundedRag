@@ -1,6 +1,14 @@
 import subprocess
 import sys
 from pathlib import Path
+import os
+
+# =====================================================
+# Add src/ to PYTHONPATH for all subprocess scripts
+# =====================================================
+SRC_DIR = Path(__file__).resolve().parents[2]   # .../src
+env = os.environ.copy()
+env["PYTHONPATH"] = str(SRC_DIR)
 
 steps = [
     "00_filter_media_2018_2019.py",
@@ -17,6 +25,6 @@ BASE_DIR = Path(__file__).resolve().parent
 for step in steps:
     print(f"Running: {step}")
     script_path = BASE_DIR / step
-    subprocess.run([sys.executable, str(script_path)], check=True)
+    subprocess.run([sys.executable, str(script_path)], check=True, env=env)
 
 print("=== Sequence preprocessing finished successfully ===")
