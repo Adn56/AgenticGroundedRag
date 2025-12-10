@@ -1,5 +1,3 @@
-# src/preprocessing/poi_preprocessing/06_remove_length1_sequences.py
-
 import pandas as pd
 import ast
 import numpy as np
@@ -33,29 +31,26 @@ try:
     df = pd.read_csv(INPUT_FILE, low_memory=False)
     df["sequence"] = df["sequence"].apply(ast.literal_eval)
 
-    before = len(df)
+    before_sequences = len(df)
+    total_entries_before = int(np.sum([len(seq) for seq in df["sequence"]]))
 
-    seq_lengths_before = [len(s) for s in df["sequence"]]
-    avg_before = np.mean(seq_lengths_before) if before > 0 else 0
-    median_before = np.median(seq_lengths_before) if before > 0 else 0
+    df = df[df["sequence"].apply(lambda seq: len(seq) > 1)]
 
-    df = df[df["sequence"].apply(lambda s: len(s) > 1)]
-    after = len(df)
+    after_sequences = len(df)
+    total_entries_after = int(np.sum([len(seq) for seq in df["sequence"]]))
 
-    seq_lengths_after = [len(s) for s in df["sequence"]]
-    avg_after = np.mean(seq_lengths_after) if after > 0 else 0
-    median_after = np.median(seq_lengths_after) if after > 0 else 0
-
-    removed = before - after
+    removed_sequences = before_sequences - after_sequences
+    removed_entries = total_entries_before - total_entries_after
 
     df.to_csv(OUTPUT_FILE, index=False)
 
     logging.info(
-        f"[STEP 06] seq_before={before:,} "
-        f"seq_after={after:,} "
-        f"removed={removed:,} "
-        f"avg_len={avg_before:.2f}->{avg_after:.2f} "
-        f"median_len={median_before:.2f}->{median_after:.2f} "
+        f"[STEP 06] sequences_before={before_sequences:,} "
+        f"sequences_after={after_sequences:,} "
+        f"removed_sequences={removed_sequences:,} "
+        f"entries_before={total_entries_before:,} "
+        f"entries_after={total_entries_after:,} "
+        f"removed_entries={removed_entries:,} "
         f"saved={OUTPUT_FILE.name}"
     )
 
