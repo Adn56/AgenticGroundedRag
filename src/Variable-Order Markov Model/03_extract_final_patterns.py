@@ -32,8 +32,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET = PROJECT_ROOT / "Dataset"
 
-IN_CSV  = DATASET / "representations" / "Cluster" / "sequential_prefix_stats_k9.csv"
-OUT_CSV = DATASET / "representations" / "Cluster" / "sequential_patterns_FINAL.csv"
+IN_CSV  = DATASET / "Variable_order_Markov_transition_rules" / "sequential_prefix_stats_k9.csv"
+OUT_CSV = DATASET / "core" / "sequential_patterns_FINAL.csv"
 
 # =========================
 # FINAL CONFIG (LOCKED)

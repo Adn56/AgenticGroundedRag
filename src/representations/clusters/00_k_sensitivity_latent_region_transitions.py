@@ -31,7 +31,7 @@ from scipy.optimize import linear_sum_assignment
 # =========================
 # PATHS
 # =========================
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 DATASET = PROJECT_ROOT / "Dataset"
 
 EMB_PATH = DATASET / "representations" / "poi_text_embeddings.jsonl"

@@ -30,7 +30,7 @@ DATASET = PROJECT_ROOT / "Dataset"
 CLUSTER_PATH = DATASET / "representations" / "Cluster" / "poi_cluster_assignment.csv"
 TRAIN_PATH   = DATASET / "splits" / "train.jsonl"
 
-OUT_DIR = DATASET / "representations" / "Cluster"
+OUT_DIR = DATASET / "Variable_order_Markov_transition_rules"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 OUT_CSV = OUT_DIR / "sequential_prefix_stats_k9.csv"
 

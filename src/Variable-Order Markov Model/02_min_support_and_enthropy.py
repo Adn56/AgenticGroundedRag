@@ -17,7 +17,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET = PROJECT_ROOT / "Dataset"
 
-PREFIX_STATS = DATASET / "representations" / "Cluster" / "sequential_prefix_stats_k9.csv"
+PREFIX_STATS = DATASET / "Variable_order_Markov_transition_rules" / "sequential_prefix_stats_k9.csv"
 VAL_PATH     = DATASET / "splits" / "validation_cluster_only.jsonl"
 
 # =========================
