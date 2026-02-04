@@ -63,4 +63,4 @@ with open(OUTPUT_JSONL, "w", encoding="utf-8") as f:
 
         f.write(json.dumps(record) + "\n")
 
-print(f"✅ Wrote user trajectories to {OUTPUT_JSONL}")
+print(f"Wrote user trajectories to {OUTPUT_JSONL}")

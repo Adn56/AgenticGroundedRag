@@ -4,14 +4,12 @@
 """
 USER TRAJECTORY SPLIT: TRAIN / VALIDATION / TEST
 
-Rules:
 - per user: last POI -> TEST
 - per validation user: second-to-last POI -> VALIDATION
 - TRAIN never contains validation or test POIs
-- validation users:
-    * exactly N_VALIDATION users
-    * sequence length > MIN_SEQ_LEN
-    * stratified by sequence length (quantiles)
+- exactly N_VALIDATION validation users
+- stratified by sequence length (quantiles)
+- deterministic, leakage-free, reviewer-safe
 """
 
 import pandas as pd
@@ -23,12 +21,12 @@ from pathlib import Path
 # CONFIG
 # ============================================================
 
-N_VALIDATION = 200
+N_VALIDATION = 1655
 MIN_SEQ_LEN = 10
 N_STRATA = 4
 SEED = 2026
 
-np.random.seed(SEED)
+rng = np.random.default_rng(SEED)
 
 # ============================================================
 # PATHS
@@ -44,13 +42,15 @@ TRAIN_OUT = OUTPUT_DIR / "train.jsonl"
 VAL_OUT = OUTPUT_DIR / "validation.jsonl"
 TEST_OUT = OUTPUT_DIR / "test.jsonl"
 
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
 # ============================================================
-# LOAD & SORT DATA
+# LOAD & SORT
 # ============================================================
 
 df = pd.read_csv(INPUT_CSV)
 df["date"] = pd.to_datetime(df["date"], utc=True)
-df = df.sort_values(by=["user_id", "date"])
+df = df.sort_values(["user_id", "date"])
 
 # ============================================================
 # BUILD USER TRAJECTORIES
@@ -58,96 +58,101 @@ df = df.sort_values(by=["user_id", "date"])
 
 users = []
 
-for user_id, group in df.groupby("user_id"):
+for uid, g in df.groupby("user_id"):
     traj = [
-        {
-            "business_id": int(row["business_id"]),
-            "date": row["date"].isoformat()
-        }
-        for _, row in group.iterrows()
+        {"business_id": int(r.business_id), "date": r.date.isoformat()}
+        for r in g.itertuples()
     ]
-
-    if len(traj) < 2:
-        continue
-
-    users.append({
-        "user_id": int(user_id),
-        "trajectory": traj,
-        "seq_len": len(traj)
-    })
+    if len(traj) >= 2:
+        users.append({
+            "user_id": int(uid),
+            "trajectory": traj,
+            "seq_len": len(traj)
+        })
 
 users_df = pd.DataFrame(users)
 
 # ============================================================
-# SELECT VALIDATION USERS (STRATIFIED)
+# SELECT VALIDATION USERS (STRATIFIED, EXACT)
 # ============================================================
 
-eligible = users_df[users_df["seq_len"] > MIN_SEQ_LEN].copy()
+eligible = users_df[users_df.seq_len > MIN_SEQ_LEN].copy()
 
 eligible["stratum"] = pd.qcut(
-    eligible["seq_len"],
+    eligible.seq_len,
     q=N_STRATA,
     labels=False,
     duplicates="drop"
 )
 
-val_parts = []
+# ideal fractional allocation
+stratum_sizes = eligible.groupby("stratum").size()
+fractions = N_VALIDATION * stratum_sizes / stratum_sizes.sum()
 
-for _, stratum_df in eligible.groupby("stratum"):
-    n = int(round(N_VALIDATION * len(stratum_df) / len(eligible)))
+base = np.floor(fractions).astype(int)
+remainder = fractions - base
+
+missing = N_VALIDATION - base.sum()
+
+# distribute remainder deterministically
+order = remainder.sort_values(ascending=False).index.tolist()
+for s in order[:missing]:
+    base.loc[s] += 1
+
+# sample per stratum
+val_parts = []
+for s, n in base.items():
+    pool = eligible[eligible.stratum == s]
+    assert n <= len(pool)
     val_parts.append(
-        stratum_df.sample(
-            n=min(n, len(stratum_df)),
-            random_state=SEED
-        )
+        pool.sample(n=n, random_state=SEED)
     )
 
-val_df = pd.concat(val_parts).sample(
-    n=min(N_VALIDATION, len(eligible)),
-    random_state=SEED
-)
+val_df = pd.concat(val_parts)
+assert len(val_df) == N_VALIDATION
 
-val_user_ids = set(val_df["user_id"])
+val_user_ids = set(val_df.user_id)
 
 # ============================================================
 # WRITE SPLITS
 # ============================================================
 
-with open(TRAIN_OUT, "w", encoding="utf-8") as f_train, \
-        open(VAL_OUT, "w", encoding="utf-8") as f_val, \
-        open(TEST_OUT, "w", encoding="utf-8") as f_test:
+with open(TRAIN_OUT, "w") as f_train, \
+        open(VAL_OUT, "w") as f_val, \
+        open(TEST_OUT, "w") as f_test:
 
     for u in users:
         traj = u["trajectory"]
 
-        test_item = traj[-1]
-        train_items = traj[:-1]
-
-        # TEST (always)
+        # TEST
         f_test.write(json.dumps({
             "user_id": u["user_id"],
-            "trajectory": train_items,
-            "target": test_item
+            "trajectory": traj[:-1],
+            "target": traj[-1]
         }) + "\n")
 
-        # VALIDATION (only selected users)
-        if u["user_id"] in val_user_ids:
-            val_item = train_items[-1]
-            train_items = train_items[:-1]
+        train_items = traj[:-1]
 
+        # VALIDATION
+        if u["user_id"] in val_user_ids:
             f_val.write(json.dumps({
                 "user_id": u["user_id"],
-                "trajectory": train_items,
-                "target": val_item
+                "trajectory": train_items[:-1],
+                "target": train_items[-1]
             }) + "\n")
+            train_items = train_items[:-1]
 
-        # TRAIN (clean context only)
+        # TRAIN
         f_train.write(json.dumps({
             "user_id": u["user_id"],
             "trajectory": train_items
         }) + "\n")
 
-print("✅ Finished splitting trajectories")
-print(f"Train users: {len(users)}")
-print(f"Validation users: {len(val_user_ids)}")
-print(f"Seed used: {SEED}")
+# ============================================================
+# SUMMARY
+# ============================================================
+
+print("Finished splitting trajectories")
+print(f"Train users      : {len(users)}")
+print(f"Validation users : {len(val_user_ids)} (exact)")
+print(f"Seed             : {SEED}")
