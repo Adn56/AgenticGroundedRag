@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Reviewer-safe k-sensitivity analysis for sequential transitions.
+k-sensitivity analysis for sequential transitions.
 
 Key properties (NO hidden restrictions):
 - No Top-N filtering
@@ -31,7 +31,7 @@ from scipy.optimize import linear_sum_assignment
 # =========================
 # PATHS
 # =========================
-PROJECT_ROOT = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET = PROJECT_ROOT / "Dataset"
 
 EMB_PATH = DATASET / "representations" / "poi_text_embeddings.jsonl"
@@ -46,7 +46,7 @@ PAIRWISE_CSV = OUT_DIR / "k_pairwise_stability_full.csv"
 # =========================
 # CONFIG
 # =========================
-K_VALUES = [8, 12, 16, 20]
+K_VALUES = [8, 12, 16, 20, 30]
 RANDOM_STATE = 42
 
 # =========================
@@ -292,7 +292,7 @@ def main():
 
             f.write(f"{k1},{k2},{wj},{ml},{rho},{js}\n")
 
-    print("Finished reviewer-safe k-sensitivity analysis.")
+    print("Finished k-sensitivity analysis.")
 
 if __name__ == "__main__":
     main()
