@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-POI → Cluster Assignment Export (Reviewer-clean)
+POI → Cluster Assignment Export
 
 This script:
 - loads normalized POI text embeddings

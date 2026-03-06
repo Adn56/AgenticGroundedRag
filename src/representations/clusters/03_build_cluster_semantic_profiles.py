@@ -2,14 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-Cluster-level attribute frequency profiles (Reviewer-clean)
+Cluster-level attribute frequency profiles
 
 For each cluster:
 - aggregates structured attributes across all POIs
 - selects top-k most frequent attribute phrases per category
 - outputs structured semantic profiles per cluster
 
-No weighting. No TF-IDF. Pure descriptive aggregation.
 """
 
 import json
