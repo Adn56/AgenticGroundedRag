@@ -29,6 +29,9 @@ VAL_SEEDS = [2026, 2027, 2028]   # <-- 3 dev subsamples for Top-K stability
 N_TEST_EVAL = 1000
 N_VAL_DEV  = 100
 
+N_TEST_DEV = 100
+TEST_DEV_SEED = 2027
+
 # ============================================================
 # PATHS
 # ============================================================
@@ -41,6 +44,7 @@ VAL_IN  = SPLIT_DIR / "validation_last9_input.jsonl"
 
 TEST_OUT = SPLIT_DIR / "test_eval_1000.jsonl"
 VAL_OUT_TEMPLATE = SPLIT_DIR / "validation_dev_100_seed{seed}.jsonl"
+TEST_DEV_OUT = SPLIT_DIR / "test_dev_100_seed2027.jsonl"
 
 # ============================================================
 # IO
@@ -98,6 +102,21 @@ def main():
 
     print(f"[TEST]  {len(test_eval_idx)} samples → {TEST_OUT.name}")
     print(f"[TEST]  Seed: {TEST_SEED}\n")
+
+    # --------------------------------------------------------
+    # TEST DEV SUBSET (from TEST_EVAL_1000)
+    # --------------------------------------------------------
+
+    test_eval_df = pd.DataFrame({"idx": range(len(test_eval_idx))})
+
+    test_dev_idx = uniform_sample(test_eval_df, N_TEST_DEV, TEST_DEV_SEED)
+
+    write_jsonl(
+        TEST_DEV_OUT,
+        [test_data[test_eval_idx[i]] for i in test_dev_idx]
+    )
+
+    print(f"[TEST DEV] {len(test_dev_idx)} samples → {TEST_DEV_OUT.name} (seed={TEST_DEV_SEED})\n")
 
     # --------------------------------------------------------
     # VALIDATION DEV SUBSETS (multiple seeds)
