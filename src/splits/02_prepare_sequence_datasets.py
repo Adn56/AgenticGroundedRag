@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-FULL DATASET PREPARATION PIPELINE (REVIEWER-SAFE)
+FULL DATASET PREPARATION PIPELINE
 
 TRAIN:
 - raw trajectories
@@ -27,9 +27,10 @@ from datetime import datetime, timezone
 
 WINDOW = 9
 
-BASE = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone")
-SPLIT_DIR = BASE / "Dataset/splits"
-CLUSTER_PATH = BASE / "Dataset/representations/Cluster/poi_cluster_assignment.csv"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SPLIT_DIR = PROJECT_ROOT / "Dataset" / "splits"
+
+CLUSTER_PATH = PROJECT_ROOT / "Dataset/representations/Cluster/poi_cluster_assignment.csv"
 
 SPLITS = {
     "test": SPLIT_DIR / "test.jsonl",
@@ -90,6 +91,7 @@ def process_split(name: str, path: Path, cluster_map: dict):
     dropped = 0
 
     for i, row in enumerate(rows):
+        user_id = row.get("user_id")
         traj = row.get("trajectory", [])
 
         # ---------------------------
@@ -133,6 +135,7 @@ def process_split(name: str, path: Path, cluster_map: dict):
         last9 = traj[-WINDOW:]
 
         llm_rows.append({
+            "user_id": user_id,
             "input": last9,
             "target": target,
             "target_seen_in_last_9": seen_flag
@@ -152,6 +155,7 @@ def process_split(name: str, path: Path, cluster_map: dict):
             raise KeyError(f"[{name}][Row {i}] Target {target_id} not in cluster map")
 
         cluster_rows.append({
+            "user_id": user_id,
             "input": input_clusters,
             "target": cluster_map[target_id],
             "target_seen_in_last_9": seen_flag

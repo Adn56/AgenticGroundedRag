@@ -9,7 +9,7 @@ USER TRAJECTORY SPLIT: TRAIN / VALIDATION / TEST
 - TRAIN never contains validation or test POIs
 - exactly N_VALIDATION validation users
 - stratified by sequence length (quantiles)
-- deterministic, leakage-free, reviewer-safe
+- deterministic, leakage-free
 """
 
 import pandas as pd
