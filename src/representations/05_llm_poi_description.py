@@ -58,7 +58,7 @@ MAX_CONCURRENT_REQUESTS = 6
 client = AsyncOpenAI(api_key=API_KEY)
 
 # ============================================================
-# PROMPTS (UNVERÄNDERT)
+# PROMPTS
 # ============================================================
 SYSTEM_PROMPT = """
 You are an expert analyst for scientific description of points of interest (POIs).
