@@ -31,16 +31,16 @@ import csv
 # PATHS
 # ============================================================
 
-BASE = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone")
-DATA = BASE / "Dataset"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
-EMB_CSV = DATA / "validation" / "hypotheses_seed2026_without_cluster_embeddings.csv"
-HYP_JSONL = DATA / "validation" / "hypotheses_seed2026_without_cluster.jsonl"
+EMB_CSV = DATASET_DIR  / "validation" / "hypotheses_seed2026_without_cluster_embeddings.csv"
+HYP_JSONL = DATASET_DIR  / "validation" / "hypotheses_seed2026_without_cluster.jsonl"
 
-FAISS_INDEX = DATA / "representations" / "poi_text_index.faiss"
-FAISS_META  = DATA / "representations" / "poi_text_meta.jsonl"
+FAISS_INDEX = DATASET_DIR  / "representations" / "poi_text_index.faiss"
+FAISS_META  = DATASET_DIR  / "representations" / "poi_text_meta.jsonl"
 
-OUTPUT_CSV = DATA / "validation_rag" / "rag_seed2026_without_cluster_top100.csv"
+OUTPUT_CSV = DATASET_DIR  / "validation_rag" / "rag_seed2026_without_cluster_top100.csv"
 
 # ============================================================
 # CONFIG

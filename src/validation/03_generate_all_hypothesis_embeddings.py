@@ -26,14 +26,16 @@ from openai import OpenAI
 # PATHS
 # ============================================================
 
-BASE = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone")
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
 JSONL_INPUT = (
-        BASE / "Dataset/validation/hypotheses_seed2026_without_cluster_withTime.jsonl"
+        DATASET_DIR / "Dataset/validation/hypotheses_seed2026_without_cluster_withTime.jsonl"
 )
 
 CSV_OUTPUT = (
-        BASE / "Dataset/validation/hypotheses_seed2026_without_cluster_withTime_embeddings.csv"
+        DATASET_DIR / "Dataset/validation/hypotheses_seed2026_without_cluster_withTime_embeddings.csv"
 )
 
 # ============================================================

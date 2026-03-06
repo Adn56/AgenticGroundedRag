@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-Analyse:
-Kann die Top1-FAISS-Distanz vorhersagen,
-ob das Target im BM25-Top15 enthalten ist?
+ Analysis:
+ Can the Top1 FAISS distance predict
+ whether the target is contained in the BM25 Top-15?
 """
 
 import json
@@ -21,10 +21,10 @@ from scipy.stats import gaussian_kde
 
 SEEDS = ["2026", "2027", "2028"]
 
-BASE = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone")
-DATA = BASE / "Dataset"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
-OUTPUT_DIR = BASE / "analysis_outputs" / "top1_predicts_bm25"
+OUTPUT_DIR = PROJECT_ROOT / "analysis_outputs" / "top1_predicts_bm25"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ============================================================
@@ -35,9 +35,9 @@ all_rows = []
 
 for seed in SEEDS:
 
-    HYP_JSONL = DATA / "validation" / f"hypotheses_seed{seed}_without_cluster.jsonl"
-    RAG_CSV   = DATA / "validation_rag" / f"rag_seed{seed}_without_cluster_top100.csv"
-    BM25_CSV  = DATA / "validation_rag" / f"rag_seed{seed}_without_cluster_bm25_top15.csv"
+    HYP_JSONL = DATASET_DIR / "validation" / f"hypotheses_seed{seed}_without_cluster.jsonl"
+    RAG_CSV   = DATASET_DIR / "validation_rag" / f"rag_seed{seed}_without_cluster_top100.csv"
+    BM25_CSV  = DATASET_DIR / "validation_rag" / f"rag_seed{seed}_without_cluster_bm25_top15.csv"
 
     df_rag = pd.read_csv(RAG_CSV)
     df_bm25 = pd.read_csv(BM25_CSV)
@@ -45,7 +45,7 @@ for seed in SEEDS:
     df_rag["user_id"] = df_rag["user_id"].astype(str)
     df_bm25["user_id"] = df_bm25["user_id"].astype(str)
 
-    # Top1 pro User bestimmen
+    # Determine Top1 per user
     df_top1 = (
         df_rag.sort_values(["user_id", "faiss_distance"])
         .groupby("user_id")
@@ -53,7 +53,7 @@ for seed in SEEDS:
         .reset_index()
     )
 
-    # Target laden
+    # Load target
     targets = {}
     with open(HYP_JSONL, encoding="utf-8") as f:
         for line in f:
@@ -84,7 +84,7 @@ print("Max distance:", df["top1_distance"].max())
 
 # ============================================================
 # ROC
-# kleinere Distanz = besser
+# lower distance = better
 # ============================================================
 
 scores = -df["top1_distance"]

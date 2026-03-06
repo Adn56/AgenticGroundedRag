@@ -12,7 +12,6 @@ VLMC CLUSTER PREDICTION ATTACHMENT (MULTI-SEED)
 - Does NOT evaluate correctness
 - Does NOT touch target or hypothesis logic
 - Writes one output file per seed
-- Reviewer-safe separation of stages
 """
 
 import csv

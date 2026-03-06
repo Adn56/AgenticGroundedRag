@@ -22,14 +22,14 @@ import csv
 # PATHS
 # ============================================================
 
-BASE = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone")
-DATA = BASE / "Dataset"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
-HYP_JSONL = DATA / "validation" / "hypotheses_seed2026_without_cluster.jsonl"
-RAG_CSV   = DATA / "validation_rag" / "rag_seed2026_without_cluster_top100.csv"
-POI_STATES = DATA / "core" / "poi_semantic_states.jsonl"
+HYP_JSONL = DATASET_DIR / "validation" / "hypotheses_seed2026_without_cluster.jsonl"
+RAG_CSV   = DATASET_DIR / "validation_rag" / "rag_seed2026_without_cluster_top100.csv"
+POI_STATES = DATASET_DIR / "core" / "poi_semantic_states.jsonl"
 
-OUTPUT_CSV = DATA / "validation_rag" / "rag_seed2026_without_cluster_bm25_top15.csv"
+OUTPUT_CSV = DATASET_DIR / "validation_rag" / "rag_seed2026_without_cluster_bm25_top15.csv"
 
 TOP_EVAL = 15
 
