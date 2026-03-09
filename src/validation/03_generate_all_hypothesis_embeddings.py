@@ -31,11 +31,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
 JSONL_INPUT = (
-        DATASET_DIR / "Dataset/validation/hypotheses_seed2026_without_cluster_withTime.jsonl"
+        DATASET_DIR / "validation"/ "hypotheses_seed2026_without_cluster_withTime.jsonl"
 )
 
 CSV_OUTPUT = (
-        DATASET_DIR / "Dataset/validation/hypotheses_seed2026_without_cluster_withTime_embeddings.csv"
+        DATASET_DIR / "validation"/ "hypotheses_seed2026_without_cluster_withTime_embeddings.csv"
 )
 
 # ============================================================
