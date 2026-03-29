@@ -4,17 +4,10 @@
 """
 K-NN BASELINE FOR NEXT-POI PREDICTION
 
-Works with trajectory-style train.jsonl
+- Fixed TOP_L cap (but no forced filling)
+- Position-based sequence similarity
 
-Train trajectory:
-[POI1 POI2 POI3 ... POIn]
-
-Converted to training samples:
-[POI1..POI9] -> POI10
-
-Similarity:
-Normalized positional overlap (sequence matching)
-sim(A,B) = (1/L) * sum_{i=1..L} I(A_i == B_i)
+sim(A,B) = (1/L) * sum I(A_i == B_i)
 """
 
 import json
@@ -37,7 +30,6 @@ TEST_PATH  = DATASET_DIR / "splits" / "test_eval_1000.jsonl"
 
 OUT_PATH = PROJECT_ROOT / "baseline" / "knn_predictions.jsonl"
 
-
 # ============================================================
 # HELPERS
 # ============================================================
@@ -49,12 +41,7 @@ def load_jsonl(path):
 
 def similarity(seq_a, seq_b):
     """
-    Position-based sequence similarity.
-
-    Computes normalized positional overlap between
-    two sequences of equal length.
-
-    sim(A,B) = (1/L) * sum_{i=1..L} I(A_i == B_i)
+    Position-based sequence similarity
     """
 
     L = min(len(seq_a), len(seq_b))
@@ -105,42 +92,60 @@ for user in train_data:
 print("Generated training samples:", len(train_sequences))
 print("Test sequences:", len(test_data))
 
+# ============================================================
+# KNN PREDICTION
+# ============================================================
 
-# ============================================================
-# KNN
-# ============================================================
+print("Running KNN...")
 
 with open(OUT_PATH, "w", encoding="utf-8") as out:
 
-    for seq in test_data:
+    for idx, seq in enumerate(test_data):
 
         user_id = seq["user_id"]
+
         test_seq = [int(v["business_id"]) for v in seq["input"]]
+        true_target = int(seq["target"]["business_id"])
 
         scores = []
 
+        # ----------------------------------------------------
+        # compute similarity to all train sequences
+        # ----------------------------------------------------
         for train_seq, train_target in train_sequences:
 
             sim = similarity(test_seq, train_seq)
 
-            scores.append((sim, train_target))
+            if sim > 0:
+                scores.append((sim, train_target))
 
-        scores.sort(reverse=True)
+        # ----------------------------------------------------
+        # NO BACKOFF → allow empty or short predictions
+        # ----------------------------------------------------
+        if not scores:
+            ranked = []
 
-        neighbours = scores[:K]
+        else:
+            scores.sort(reverse=True)
 
-        targets = [t for _, t in neighbours]
+            neighbours = scores[:K]
 
-        counts = Counter(targets)
+            targets = [t for _, t in neighbours]
 
-        ranked = [t for t, _ in counts.most_common(TOP_L)]
+            counts = Counter(targets)
 
+            ranked = [t for t, _ in counts.most_common(TOP_L)]
+
+        # ----------------------------------------------------
+        # WRITE OUTPUT
+        # ----------------------------------------------------
         out.write(json.dumps({
             "user_id": user_id,
             "prediction": ranked,
-            "target": int(seq["target"]["business_id"])
+            "target": true_target
         }) + "\n")
 
-        print("processed user:", user_id)
+        if idx % 50 == 0:
+            print(f"processed {idx}/{len(test_data)}")
 
 print("\nDONE")

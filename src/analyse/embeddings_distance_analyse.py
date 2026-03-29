@@ -5,20 +5,27 @@ import json
 from pathlib import Path
 from itertools import combinations
 from scipy.stats import ttest_ind
+from pathlib import Path
 
 # ---------------------------------------------------
 # PATHS
 # ---------------------------------------------------
 
-DATASET_DIR = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone/Dataset")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DATASET_DIR = PROJECT_ROOT / "Dataset"
+BASELINE_PATH = PROJECT_ROOT / "baseline"
+RESULTS_PATH = PROJECT_ROOT / "results"
 
-CSV_PATH = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone/results/final_llm_ranking_test_eval_1000.csv")
+SEQ_PATH = DATASET_DIR / "splits" / f"test_eval_1000.jsonl"
 
-BASELINE_PATH = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone/baseline/baseline_llm_zero_shot_predictions.jsonl")
 
-KNN_PATH = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone/baseline/knn_predictions.jsonl")
+CSV_PATH = PROJECT_ROOT / "results" / "final_llm_ranking_test_eval_1000.csv"
 
-DISTANCE_PATH = Path("/Users/adrianhoffmann/Documents/Master/Projektarbeit/AgenticGroundedRagClone/baseline/distance_baseline_top20.csv")
+LLM_ZERO = BASELINE_PATH / "baseline_llm_zero_shot_predictions.jsonl"
+
+KNN_PATH = BASELINE_PATH / "knn_predictions.jsonl"
+
+DISTANCE_PATH = BASELINE_PATH / "distance_baseline_top20.csv"
 
 FAISS_INDEX = DATASET_DIR / "representations" / "poi_text_index.faiss"
 FAISS_META  = DATASET_DIR / "representations" / "poi_text_meta.jsonl"
@@ -132,7 +139,7 @@ print(aggregate_results(method_results))
 
 baseline_results = []
 
-with open(BASELINE_PATH) as f:
+with open(LLM_ZERO) as f:
     for line in f:
         row = json.loads(line)
         preds = row["prediction"][:5]
