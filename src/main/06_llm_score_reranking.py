@@ -25,7 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RESULTS_DIR = PROJECT_ROOT / "results"
 
 SCORING_PATH = RESULTS_DIR / "scoring_test_eval_1000.jsonl"
-BM25_PATH = RESULTS_DIR / "rag_hypothesis_test_eval_1000_bm25_top15.csv"
+RERANK_PATH = RESULTS_DIR / "distance_reranked_top20.csv"
 
 OUTPUT_PATH = RESULTS_DIR / "final_llm_ranking_test_eval_1000.csv"
 
@@ -71,10 +71,10 @@ df_scores = pd.DataFrame(records)
 # LOAD BM25 RANKS
 # ============================================================
 
-df_bm25 = pd.read_csv(BM25_PATH)
+df_rerank = pd.read_csv(RERANK_PATH)
 
-df_bm25 = df_bm25.rename(columns={
-    "rerank_rank": "bm25_rank"
+df_rerank = df_rerank.rename(columns={
+    "rank": "distance_rank"
 })
 
 
@@ -83,7 +83,7 @@ df_bm25 = df_bm25.rename(columns={
 # ============================================================
 
 df = df_scores.merge(
-    df_bm25[["user_id", "business_id", "bm25_rank"]],
+    df_rerank[["user_id", "business_id", "distance_rank"]],
     on=["user_id", "business_id"],
     how="left"
 )
@@ -94,7 +94,7 @@ df = df_scores.merge(
 # ============================================================
 
 df = df.sort_values(
-    by=["user_id", "score", "bm25_rank"],
+    by=["user_id", "score", "distance_rank"],
     ascending=[True, False, True]
 )
 
@@ -115,7 +115,7 @@ df = df[[
     "business_id",
     "rank",
     "score",
-    "bm25_rank"
+    "distance_rank"
 ]]
 
 df.to_csv(OUTPUT_PATH, index=False)
