@@ -46,7 +46,7 @@ OUTPUT_CSV = PROJECT_ROOT  / "prompt_ablation" / "rag_hypothesis_test_eval_1000_
 # CONFIG
 # ============================================================
 
-RAG_K = 50
+RAG_K = 200
 
 # ============================================================
 # LOAD META (business_id mapping)
