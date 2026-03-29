@@ -8,7 +8,7 @@ Evaluates where the true target POI appears within ranks 1-15 across
 three pipeline stages:
 
 1. Hypothesis / embedding retrieval
-2. BM25 reranking
+2. Distance reranking
 3. LLM reranking
 
 Additional metrics:
@@ -16,12 +16,11 @@ Additional metrics:
 - Accuracy@5
 - Accuracy@10
 - Accuracy@15
+- Accuracy@20
 
 Also computes:
-- rank distributions (1-15 + MISS)
+- rank distributions (1-20 + MISS)
 - rank-shift statistics between stages
-- sorted shift lists
-- Top-15 entry / exit transitions between stages
 """
 
 import json
@@ -41,10 +40,10 @@ RESULTS_DIR = PROJECT_ROOT / "results"
 TEST_PATH = DATASET_DIR / "splits" / "test_eval_1000.jsonl"
 
 RAG_PATH = RESULTS_DIR / "rag_hypothesis_test_eval_1000_top100.csv"
-BM25_PATH = RESULTS_DIR / "rag_hypothesis_test_eval_1000_bm25_top15.csv"
+BM25_PATH = RESULTS_DIR / "distance_reranked_top20.csv"
 LLM_PATH = RESULTS_DIR / "final_llm_ranking_test_eval_1000.csv"
 
-TOP_K = 15
+TOP_K = 20
 
 
 # ============================================================
@@ -271,8 +270,9 @@ def compute_accuracy(counts, total):
     acc5 = sum(counts[i] for i in range(1,6)) / total
     acc10 = sum(counts[i] for i in range(1,11)) / total
     acc15 = sum(counts[i] for i in range(1,16)) / total
+    acc20 = sum(counts[i] for i in range(1,21)) / total
 
-    return acc1, acc5, acc10, acc15
+    return acc1, acc5, acc10, acc15, acc20
 
 
 total = len(targets)
@@ -285,62 +285,7 @@ print("\n==============================================")
 print("ACCURACY METRICS")
 print("==============================================")
 
-print(f"{'Stage':<10}{'Acc@1':<10}{'Acc@5':<10}{'Acc@10':<10}{'Acc@15':<10}")
-print(f"{'Hyp':<10}{hyp_acc[0]:<10.3f}{hyp_acc[1]:<10.3f}{hyp_acc[2]:<10.3f}{hyp_acc[3]:<10.3f}")
-print(f"{'BM25':<10}{bm25_acc[0]:<10.3f}{bm25_acc[1]:<10.3f}{bm25_acc[2]:<10.3f}{bm25_acc[3]:<10.3f}")
-print(f"{'LLM':<10}{llm_acc[0]:<10.3f}{llm_acc[1]:<10.3f}{llm_acc[2]:<10.3f}{llm_acc[3]:<10.3f}")
-
-
-# ============================================================
-# PRINT RANK SHIFT SUMMARY
-# ============================================================
-
-print("\n==============================================")
-print("RANK SHIFT ANALYSIS")
-print("==============================================")
-
-print("\nHypothesis -> BM25")
-print("Improved (+):", hyp_to_bm25_plus)
-print("Worse (-):", hyp_to_bm25_minus)
-print("Sum shift:", hyp_to_bm25_sum)
-
-print("\nBM25 -> LLM")
-print("Improved (+):", bm25_to_llm_plus)
-print("Worse (-):", bm25_to_llm_minus)
-print("Sum shift:", bm25_to_llm_sum)
-
-
-# ============================================================
-# PRINT TOP-K ENTRY / EXIT SUMMARY
-# ============================================================
-
-print("\n==============================================")
-print("TOP-15 ENTRY / EXIT ANALYSIS")
-print("==============================================")
-
-print("\nHypothesis -> BM25")
-print("Entered Top-15:", len(entered_hyp_to_bm25))
-print("Left Top-15:", len(left_hyp_to_bm25))
-
-print("\nBM25 -> LLM")
-print("Entered Top-15:", len(entered_bm25_to_llm))
-print("Left Top-15:", len(left_bm25_to_llm))
-
-
-# ============================================================
-# PRINT SORTED SHIFTS
-# ============================================================
-
-print("\n==============================================")
-print("SORTED SHIFTS HYP -> BM25")
-print("==============================================")
-
-for shift, user, r1, r2 in sorted(hyp_bm25_shifts, key=lambda x: x[0], reverse=True):
-    print(f"user {user} | {r1} -> {r2} | shift {shift}")
-
-print("\n==============================================")
-print("SORTED SHIFTS BM25 -> LLM")
-print("==============================================")
-
-for shift, user, r1, r2 in sorted(bm25_llm_shifts, key=lambda x: x[0], reverse=True):
-    print(f"user {user} | {r1} -> {r2} | shift {shift}")
+print(f"{'Stage':<10}{'Acc@1':<10}{'Acc@5':<10}{'Acc@10':<10}{'Acc@15':<10}{'Acc@20':<10}")
+print(f"{'Hyp':<10}{hyp_acc[0]:<10.3f}{hyp_acc[1]:<10.3f}{hyp_acc[2]:<10.3f}{hyp_acc[3]:<10.3f}{hyp_acc[4]:<10.3f}")
+print(f"{'Distance':<10}{bm25_acc[0]:<10.3f}{bm25_acc[1]:<10.3f}{bm25_acc[2]:<10.3f}{bm25_acc[3]:<10.3f}{bm25_acc[4]:<10.3f}")
+print(f"{'LLM':<10}{llm_acc[0]:<10.3f}{llm_acc[1]:<10.3f}{llm_acc[2]:<10.3f}{llm_acc[3]:<10.3f}{llm_acc[4]:<10.3f}")

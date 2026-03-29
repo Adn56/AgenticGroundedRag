@@ -143,7 +143,7 @@ print("---------------------------")
 print(f"Hit@1  : {hit_at_k(1):.4f}")
 print(f"Hit@5  : {hit_at_k(5):.4f}")
 print(f"Hit@10 : {hit_at_k(10):.4f}")
-print(f"Hit@15 : {hit_at_k(15):.4f}")
+print(f"Hit@20 : {hit_at_k(20):.4f}")
 
 
 print("\nnDCG@K")
@@ -151,7 +151,7 @@ print("---------------------------")
 
 print(f"nDCG@5  : {ndcg_at_k(5):.4f}")
 print(f"nDCG@10 : {ndcg_at_k(10):.4f}")
-print(f"nDCG@15 : {ndcg_at_k(15):.4f}")
+print(f"nDCG@20 : {ndcg_at_k(20):.4f}")
 
 
 print("\nMRR")

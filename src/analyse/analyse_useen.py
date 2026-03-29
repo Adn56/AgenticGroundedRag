@@ -21,9 +21,9 @@ TEST_JSONL = DATASET_DIR / "splits" / "test_eval_1000.jsonl"
 LLM_RANKING_CSV = RESULTS_DIR / "final_llm_ranking_test_eval_1000.csv"
 
 LLM_BASELINE_JSONL = BASELINE_DIR / "baseline_llm_zero_shot_predictions.jsonl"
-
 KNN_BASELINE_JSONL = BASELINE_DIR / "knn_predictions.jsonl"
 
+DISTANCE_CSV = RESULTS_DIR / "distance_baseline_top20.csv"
 
 # ============================================================
 # STEP 1
@@ -55,6 +55,8 @@ def compute_metrics(rank_list, total):
     hits1 = sum(1 for r in rank_list if r == 1)
     hits5 = sum(1 for r in rank_list if r <= 5)
     hits10 = sum(1 for r in rank_list if r <= 10)
+    hits15 = sum(1 for r in rank_list if r <= 15)
+    hits20 = sum(1 for r in rank_list if r <= 20)
 
     mean_rank = None
     if rank_list:
@@ -63,6 +65,8 @@ def compute_metrics(rank_list, total):
     print("Hit@1 :", round(hits1 / total, 4))
     print("Hit@5 :", round(hits5 / total, 4))
     print("Hit@10:", round(hits10 / total, 4))
+    print("Hit@15:", round(hits15 / total, 4))
+    print("Hit@20:", round(hits20 / total, 4))
 
     if mean_rank:
         print("MeanRank:", round(mean_rank, 2))
@@ -189,6 +193,54 @@ with open(KNN_BASELINE_JSONL, "r") as f:
 
 print("\n==============================")
 print("KNN BASELINE")
+print("==============================")
+
+compute_metrics(ranks, len(unseen_targets))
+
+
+# ============================================================
+# STEP 5
+# DISTANCE BASELINE
+# ============================================================
+
+user_predictions = defaultdict(list)
+
+with open(DISTANCE_CSV, "r") as f:
+    reader = csv.DictReader(f)
+
+    for row in reader:
+
+        user_id = row["user_id"]
+
+        if user_id not in unseen_targets:
+            continue
+
+        business = row["business_id"]
+        rank = int(row["rank"])
+
+        user_predictions[user_id].append((rank, business))
+
+
+ranks = []
+
+for user_id, target in unseen_targets.items():
+
+    preds = sorted(user_predictions[user_id])
+
+    found_rank = None
+
+    for rank, business in preds:
+        if business == target:
+            found_rank = rank
+            break
+
+    if found_rank:
+        ranks.append(found_rank)
+
+
+print("\n==============================")
+print("DISTANCE BASELINE")
+print("(Spatial Proximity)")
 print("==============================")
 
 compute_metrics(ranks, len(unseen_targets))
