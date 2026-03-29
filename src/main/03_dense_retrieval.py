@@ -46,7 +46,7 @@ OUTPUT_CSV = PROJECT_ROOT  / "results" / "rag_hypothesis_test_eval_1000_top100.c
 # CONFIG
 # ============================================================
 
-RAG_K = 100
+RAG_K = 200
 
 # ============================================================
 # LOAD META (business_id mapping)

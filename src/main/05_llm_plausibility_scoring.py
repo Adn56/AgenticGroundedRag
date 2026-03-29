@@ -9,7 +9,6 @@ Parallel version (6 concurrent requests)
 
 Features:
 - Temperature = 0
-- Prompt archived 1:1
 - Output saved as JSONL
 - Crash-safe (flush after every write)
 - Resume capability
@@ -40,7 +39,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET_DIR = PROJECT_ROOT / "Dataset"
 
 SEQ_PATH = DATASET_DIR / "splits" / f"test_eval_1000.jsonl"
-TOP15_PATH = PROJECT_ROOT / "results" / "rag_hypothesis_test_eval_1000_bm25_top15.csv"
+TOP20_PATH = PROJECT_ROOT / "results" / "distance_reranked_top20.csv"
 POI_PATH = DATASET_DIR / "core" / "poi_semantic_states.jsonl"
 
 PROMPT_LOG_PATH = PROJECT_ROOT / "results" / f"prompts_scoring_test_eval_1000.jsonl"
@@ -157,7 +156,7 @@ print(f"Resume mode active. Already processed: {len(processed_users)} users.")
 # ============================================================
 
 splits = load_jsonl(SEQ_PATH)
-df_top15 = pd.read_csv(TOP15_PATH)
+df_top20 = pd.read_csv(TOP20_PATH)
 
 poi_meta = {}
 for obj in load_jsonl(POI_PATH):
@@ -224,7 +223,7 @@ Time: {visit["date_time"]}{dist_prev_text}
     if not last_meta:
         return
 
-    group = df_top15[df_top15["user_id"] == user_id]
+    group = df_top20[df_top20["user_id"] == user_id]
 
     candidates_block = ""
 
