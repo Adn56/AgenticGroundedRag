@@ -39,7 +39,7 @@ INFERENCE_DIR = DATA / "scoring"
 INFERENCE_DIR.mkdir(exist_ok=True)
 
 SPLIT_PATH = DATA / "splits" / f"validation_dev_100_{SEED_TAG}.jsonl"
-TOP15_PATH = DATA / "validation_rag" / f"rag_{SEED_TAG}_without_cluster_bm25_top15.csv"
+TOP20_PATH = DATA / "validation_rag" / f"rag_{SEED_TAG}_without_cluster_distance_top20.csv"
 POI_PATH = DATA / "core" / "poi_semantic_states.jsonl"
 
 PROMPT_LOG_PATH = INFERENCE_DIR / f"prompts_{SEED_TAG}.jsonl"
@@ -150,7 +150,7 @@ print(f"Resume mode active. Already processed: {len(processed_users)} users.")
 # ============================================================
 
 splits = load_jsonl(SPLIT_PATH)
-df_top15 = pd.read_csv(TOP15_PATH)
+df_top15 = pd.read_csv(TOP20_PATH)
 
 poi_meta = {}
 for obj in load_jsonl(POI_PATH):
