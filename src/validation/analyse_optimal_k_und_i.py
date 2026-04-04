@@ -7,15 +7,14 @@ FULL PIPELINE (MULTI-SEED) + BASELINE (NO RE-RANKING) + MEDIAN RANK + CONSOLE LO
 1) For each seed:
    - RAG sweep (FAISS retrieval)
    - Baseline (no reranking): rank of target in FAISS candidate order (after same doc-filtering)
-   - BM25 re-ranking
-   - TF-IDF re-ranking
+   - Distance re-ranking
    - hit computation for multiple TopK thresholds
    - median baseline rank per RAG_K
 2) Aggregate across seeds:
-   - mean hits per (RAG_K, TopK) for baseline / BM25 / TF-IDF
+   - mean hits per (RAG_K, TopK) for baseline / Distance / TF-IDF
    - mean coverage per RAG_K
    - median-of-medians for baseline rank per RAG_K (also mean median printed)
-3) Global maximum selection (on mean BM25 hits)
+3) Global maximum selection (on mean Distance hits)
 
 Additionally:
 - Saves the ENTIRE console output to a log file (while still printing to console).
@@ -362,7 +361,7 @@ with open(LOG_PATH, "w", encoding="utf-8") as log_fh:
     # ============================================================
 
     print("\n\n========================================")
-    print("=== GLOBAL MAXIMUM SELECTION (BM25, MEAN OVER SEEDS) ===")
+    print("=== GLOBAL MAXIMUM SELECTION (Distance, MEAN OVER SEEDS) ===")
     print("========================================\n")
 
     for topk in TOP_K_EVAL:
