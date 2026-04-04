@@ -62,6 +62,8 @@ TOP_K_EVAL   = [5, 10, 15, 20, 25, 30]
 
 TOTAL_CASES = 100
 
+SEED = 2027
+
 # ============================================================
 # TEE
 # ============================================================
@@ -149,6 +151,7 @@ with open(LOG_PATH, "w", encoding="utf-8") as log_fh:
 
     all_results = []
     all_medians = []
+    topk_records = []
 
     for seed_cfg in SEEDS:
 
@@ -222,6 +225,19 @@ with open(LOG_PATH, "w", encoding="utf-8") as log_fh:
                 ranked = sorted(dist_list, key=lambda x: x[1])
 
                 dist_rank = next(i+1 for i,(bid,_) in enumerate(ranked) if bid == target)
+
+                # ---------------- STORE TOP-K ----------------
+                topk_records.append({
+                    "seed": seed_name,
+                    "RAG_K": K,
+                    "user_id": uid,
+                    "target": target,
+                    "last_poi": last_poi,
+                    "base_top20": valid_candidates[:20],
+                    "dist_top20": [bid for bid,_ in ranked[:20]],
+                    "base_rank": base_rank,
+                    "dist_rank": dist_rank
+                })
 
                 # hits
                 for tk in TOP_K_EVAL:
@@ -298,6 +314,15 @@ with open(LOG_PATH, "w", encoding="utf-8") as log_fh:
         print(f"  Best RAG_K={best_k}")
         print(f"  Hits={best['dist_hits']:.3f}")
         print(f"  Coverage={coverage:.2f}%\n")
+
+    # ============================================================
+    # SAVE TOP-K RESULTS
+    # ============================================================
+    
+    topk_df = pd.DataFrame(topk_records)
+    topk_df.to_csv(LOG_DIR / "rag_{SEED_TAG}_without_cluster_distance_top20.csv", index=False)
+    
+    print("\nTop-20 predictions saved.")
 
     print("\nDONE.")
     sys.stdout = sys.__stdout__
