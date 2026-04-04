@@ -37,10 +37,10 @@ for seed in SEEDS:
 
     HYP_JSONL = DATASET_DIR / "validation" / f"hypotheses_seed{seed}_without_cluster.jsonl"
     RAG_CSV   = DATASET_DIR / "validation_rag" / f"rag_seed{seed}_without_cluster_top100.csv"
-    BM25_CSV  = DATASET_DIR / "validation_rag" / f"rag_seed{seed}_without_cluster_bm25_top15.csv"
+    TOP20_CSV  = DATASET_DIR / "validation_rag" / f"rag_{SEED_TAG}_without_cluster_distance_top20.csv"
 
     df_rag = pd.read_csv(RAG_CSV)
-    df_bm25 = pd.read_csv(BM25_CSV)
+    df_bm25 = pd.read_csv(TOP20_CSV)
 
     df_rag["user_id"] = df_rag["user_id"].astype(str)
     df_bm25["user_id"] = df_bm25["user_id"].astype(str)
