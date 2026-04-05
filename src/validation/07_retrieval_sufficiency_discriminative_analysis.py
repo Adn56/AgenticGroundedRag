@@ -51,7 +51,7 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 def load_seed(seed):
 
     llm_file = DATA / "scoring" / f"outputs_seed{seed}.jsonl"
-    bm25_file = DATA / "validation_rag" / f"rag_{SEED_TAG}_without_cluster_distance_top20.csv
+    bm25_file = DATA / "validation_rag" / f"rag_{seed}_without_cluster_distance_top20.csv
 
     bm25 = pd.read_csv(bm25_file)
     positives = set(bm25[bm25["is_target"] == 1]["user_id"].values)
