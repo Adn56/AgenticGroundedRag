@@ -23,7 +23,7 @@ LLM_RANKING_CSV = RESULTS_DIR / "final_llm_ranking_test_eval_1000.csv"
 LLM_BASELINE_JSONL = BASELINE_DIR / "baseline_llm_zero_shot_predictions.jsonl"
 KNN_BASELINE_JSONL = BASELINE_DIR / "knn_predictions.jsonl"
 
-DISTANCE_CSV = RESULTS_DIR / "distance_baseline_top20.csv"
+DISTANCE_CSV = BASELINE_DIR / "distance_baseline_top20.csv"
 
 # ============================================================
 # STEP 1
