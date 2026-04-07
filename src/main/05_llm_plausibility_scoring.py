@@ -12,7 +12,6 @@ Features:
 - Output saved as JSONL
 - Crash-safe (flush after every write)
 - Resume capability
-- No manual adjustments required
 """
 
 import json
