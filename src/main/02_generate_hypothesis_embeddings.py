@@ -2,19 +2,18 @@
 # -*- coding: utf-8 -*-
 
 """
-GENERATE EMBEDDINGS FOR ALL HYPOTHESES (FULL OVERWRITE)
+GENERATE EMBEDDINGS FOR ALL HYPOTHESES 
 
-- Reads: hypotheses_seed2026.jsonl   (JSONL, NOT CSV!)
+- Reads: hypotheses_seed2026.jsonl
 - For EACH row:
     * extracts hypothesis["summary"]
     * embeds summary
-- Writes (OVERWRITES):
+- Writes:
     hypotheses_seed2026_embeddings.csv
 
 Guarantees:
 - exactly one embedding per hypothesis
 - no partial state
-- deterministic overwrite
 """
 
 import csv
@@ -94,7 +93,7 @@ for i, r in enumerate(rows, start=1):
         print(f"Embedded {i}/{len(rows)} hypotheses")
 
 # ============================================================
-# WRITE OUTPUT (OVERWRITE)
+# WRITE OUTPUT 
 # ============================================================
 
 with open(CSV_OUTPUT, "w", newline="", encoding="utf-8") as f:
