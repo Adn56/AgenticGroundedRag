@@ -4,16 +4,12 @@
 """
 GENERATE EMBEDDINGS FOR ALL HYPOTHESES 
 
-- Reads: hypotheses_seed2026.jsonl
+- Reads: hypothesis_test_eval_1000.jsonl
 - For EACH row:
     * extracts hypothesis["summary"]
     * embeds summary
 - Writes:
-    hypotheses_seed2026_embeddings.csv
-
-Guarantees:
-- exactly one embedding per hypothesis
-- no partial state
+    hypothesis_test_eval_1000_embeddings.csv
 """
 
 import csv
