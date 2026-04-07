@@ -4,7 +4,6 @@
 """
 Grid Search using PRECOMPUTED TRAIN prefix stats (CSV)
 
-This script is now BIT-IDENTICAL in logic to the direct grid-search.
 """
 
 import csv
