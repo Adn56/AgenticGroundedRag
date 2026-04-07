@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-EXPORT TOP-500 RAG RETRIEVAL CANDIDATES
+EXPORT TOP-200 RAG RETRIEVAL CANDIDATES
 
 - Reads:
     hypotheses_seed2028_embeddings.csv
