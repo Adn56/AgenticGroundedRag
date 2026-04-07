@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 
 """
-LLM-ONLY SEMANTIC HYPOTHESIS GENERATION (RESUMABLE, SEED-SPECIFIC)
+LLM-ONLY SEMANTIC HYPOTHESIS GENERATION
 
-- One output file per seed
 - Resumable (skip processed user_ids)
 - Writes AFTER EACH RESPONSE
 - Stores:
     (1) hypothesis JSONL
     (2) exact prompts CSV (verbatim LLM input)
-- NO embeddings
 """
 
 import os
