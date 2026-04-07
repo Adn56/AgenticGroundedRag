@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-CREATE PREFIX STATS (TRAIN) – REVIEWER-SAFE
+CREATE PREFIX STATS (TRAIN)
 
 Stores EXACTLY the same dH definition as used in the direct grid-search:
 
