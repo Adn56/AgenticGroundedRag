@@ -5,19 +5,14 @@
 EXPORT TOP-200 RAG RETRIEVAL CANDIDATES
 
 - Reads:
-    hypotheses_seed2028_embeddings.csv
-    hypotheses_seed2028.jsonl
+    hypothesis_test_eval_1000_embeddings.csv
+    hypothesis_test_eval_1000.jsonl
 - Uses:
     FAISS dense index
 - Retrieves:
     Top-200 nearest POIs per hypothesis embedding
 - Writes:
-    rag_seed2028_top200.csv
-
-Guarantees:
-- deterministic FAISS retrieval
-- no reranking
-- one row per (user_id, retrieved_rank)
+    rag_hypothesis_test_eval_1000_top200.csv
 """
 
 import json
