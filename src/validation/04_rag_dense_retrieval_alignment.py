@@ -12,7 +12,7 @@ EXPORT TOP-500 RAG RETRIEVAL CANDIDATES
 - Retrieves:
     Top-200 nearest POIs per hypothesis embedding
 - Writes:
-    rag_seed2028_top500.csv
+    rag_seed2028_top200.csv
 
 Guarantees:
 - deterministic FAISS retrieval
