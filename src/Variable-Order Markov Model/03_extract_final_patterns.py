@@ -18,9 +18,6 @@ This script FILTERS prefixes that satisfy:
 - support >= min_support
 - dH >= entropy_eps
 - k >= MIN_K_ALLOWED
-
-No re-evaluation. No validation data touched.
-Reviewer-safe.
 """
 
 import csv
