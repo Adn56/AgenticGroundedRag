@@ -39,8 +39,8 @@ RESULTS_DIR = PROJECT_ROOT / "results"
 
 TEST_PATH = DATASET_DIR / "splits" / "test_eval_1000.jsonl"
 
-RAG_PATH = RESULTS_DIR / "rag_hypothesis_test_eval_1000_top100.csv"
-BM25_PATH = RESULTS_DIR / "distance_reranked_top20.csv"
+RAG_PATH = RESULTS_DIR / "rag_hypothesis_test_eval_1000_top200.csv"
+DISTANCE_PATH = RESULTS_DIR / "distance_reranked_top20.csv"
 LLM_PATH = RESULTS_DIR / "final_llm_ranking_test_eval_1000.csv"
 
 TOP_K = 20
@@ -84,7 +84,7 @@ for _, row in df_rag.iterrows():
 # LOAD BM25
 # ============================================================
 
-df_bm25 = pd.read_csv(BM25_PATH)
+df_bm25 = pd.read_csv(DISTANCE_PATH)
 
 df_bm25 = df_bm25.rename(columns={
     "rerank_rank": "rank"
