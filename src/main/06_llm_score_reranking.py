@@ -8,7 +8,7 @@ Steps:
 1. Load LLM behavioural scores
 2. Compute mean score: (s_dist + s_time + s_sem) / 3
 3. Rank candidates by mean score
-4. Tie-break using BM25 rank
+4. Tie-break using Distance rank
 5. Save final ranking
 """
 
@@ -68,7 +68,7 @@ df_scores = pd.DataFrame(records)
 
 
 # ============================================================
-# LOAD BM25 RANKS
+# LOAD Distance RANKS
 # ============================================================
 
 df_rerank = pd.read_csv(RERANK_PATH)
