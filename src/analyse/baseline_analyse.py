@@ -39,7 +39,7 @@ FILES = {
     "Agentic-Grounded-Rag": PROJECT_ROOT /"results"/ "final_llm_ranking_test_eval_1000.csv",
     "LLM_ZERO_SHOT": BASELINE_DIR / "baseline_llm_zero_shot_predictions.jsonl",
     "KNN_BASELINE": BASELINE_DIR / "knn_predictions.jsonl",
-    "DISTANCE_BASELINE": PROJECT_ROOT / "results" / "distance_baseline_top20.csv"
+    "DISTANCE_BASELINE": BASELINE_DIR / "distance_baseline_top20.csv"
 }
 
 # ============================================================
