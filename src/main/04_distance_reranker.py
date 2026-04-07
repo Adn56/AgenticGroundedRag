@@ -25,7 +25,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
 HYP_JSONL = PROJECT_ROOT / "results" / "hypothesis_test_eval_1000.jsonl"
-RAG_CSV   = PROJECT_ROOT / "results" / "rag_hypothesis_test_eval_1000_top100.csv"
+RAG_CSV   = PROJECT_ROOT / "results" / "rag_hypothesis_test_eval_1000_top200.csv"
 POI_STATES = DATASET_DIR / "core" / "poi_semantic_states.jsonl"
 
 OUTPUT_CSV = PROJECT_ROOT / "results" / "distance_reranked_top20.csv"
