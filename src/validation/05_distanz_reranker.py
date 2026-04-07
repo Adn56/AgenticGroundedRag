@@ -25,10 +25,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
 HYP_JSONL = PROJECT_ROOT / "validation" / "hypotheses_seed2026_without_cluster.jsonl"
-RAG_CSV   = PROJECT_ROOT / "validation" / "rag_seed2026_without_cluster_top200.csv"
+RAG_CSV   = PROJECT_ROOT / "validation_rag" / "rag_seed2026_without_cluster_top200.csv"
 POI_STATES = DATASET_DIR / "core" / "poi_semantic_states.jsonl"
 
-OUTPUT_CSV = PROJECT_ROOT / "validation" / "distance_reranked_top20.csv"
+OUTPUT_CSV = PROJECT_ROOT / "validation_rag" / "rag_seed2026_without_cluster_distance_reranked_top20.csv"
 
 TOP_K = 20
 
