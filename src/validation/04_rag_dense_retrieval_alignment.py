@@ -10,8 +10,8 @@ EXPORT TOP-500 RAG RETRIEVAL CANDIDATES
 - Uses:
     FAISS dense index
 - Retrieves:
-    Top-500 nearest POIs per hypothesis embedding
-- Writes (OVERWRITE):
+    Top-200 nearest POIs per hypothesis embedding
+- Writes:
     rag_seed2028_top500.csv
 
 Guarantees:
@@ -40,13 +40,13 @@ HYP_JSONL = DATASET_DIR  / "validation" / "hypotheses_seed2026_without_cluster.j
 FAISS_INDEX = DATASET_DIR  / "representations" / "poi_text_index.faiss"
 FAISS_META  = DATASET_DIR  / "representations" / "poi_text_meta.jsonl"
 
-OUTPUT_CSV = DATASET_DIR  / "validation_rag" / "rag_seed2026_without_cluster_top100.csv"
+OUTPUT_CSV = DATASET_DIR  / "validation_rag" / "rag_seed2026_without_cluster_top200.csv"
 
 # ============================================================
 # CONFIG
 # ============================================================
 
-RAG_K = 100
+RAG_K = 200
 
 # ============================================================
 # LOAD META (business_id mapping)
