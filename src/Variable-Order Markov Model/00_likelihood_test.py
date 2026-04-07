@@ -8,10 +8,6 @@ GLOBAL LOG-LIKELIHOOD EVALUATION FOR MARKOV ORDER SELECTION
 - VALIDATION: compute global log-likelihood
 - Purpose: select maximum useful order k (model-level, not per sequence)
 
-Reviewer-safe:
-- no test leakage
-- no heuristics
-- pure likelihood
 """
 
 import json
