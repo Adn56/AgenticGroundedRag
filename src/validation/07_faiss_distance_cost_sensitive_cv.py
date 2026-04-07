@@ -4,7 +4,7 @@
 """
  Analysis:
  Can the Top1 FAISS distance predict
- whether the target is contained in the BM25 Top-15?
+ whether the target is contained in the Distance Top-20?
 """
 
 import json
@@ -24,7 +24,7 @@ SEEDS = ["2026", "2027", "2028"]
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATASET_DIR  = PROJECT_ROOT / "Dataset"
 
-OUTPUT_DIR = PROJECT_ROOT / "analysis_outputs" / "top1_predicts_bm25"
+OUTPUT_DIR = PROJECT_ROOT / "analysis_outputs" / "top1_predicts_distance20"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ============================================================
@@ -36,7 +36,7 @@ all_rows = []
 for seed in SEEDS:
 
     HYP_JSONL = DATASET_DIR / "validation" / f"hypotheses_seed{seed}_without_cluster.jsonl"
-    RAG_CSV   = DATASET_DIR / "validation_rag" / f"rag_seed{seed}_without_cluster_top100.csv"
+    RAG_CSV   = DATASET_DIR / "validation_rag" / f"rag_seed{seed}_without_cluster_top200.csv"
     TOP20_CSV  = DATASET_DIR / "validation_rag" / f"rag_{seed}_without_cluster_distance_top20.csv"
 
     df_rag = pd.read_csv(RAG_CSV)
