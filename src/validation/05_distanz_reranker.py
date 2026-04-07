@@ -28,7 +28,7 @@ HYP_JSONL = PROJECT_ROOT / "validation" / "hypotheses_seed2026_without_cluster.j
 RAG_CSV   = PROJECT_ROOT / "validation_rag" / "rag_seed2026_without_cluster_top200.csv"
 POI_STATES = DATASET_DIR / "core" / "poi_semantic_states.jsonl"
 
-OUTPUT_CSV = PROJECT_ROOT / "validation_rag" / "rag_seed2026_without_cluster_distance_reranked_top20.csv"
+OUTPUT_CSV = PROJECT_ROOT / "validation_rag" / "rag_seed2026_without_cluster_distance_top20.csv"
 
 TOP_K = 20
 
