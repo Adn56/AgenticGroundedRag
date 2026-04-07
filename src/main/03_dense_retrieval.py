@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-EXPORT TOP-500 RAG RETRIEVAL CANDIDATES
+EXPORT TOP-200 RAG RETRIEVAL CANDIDATES
 
 - Reads:
     hypotheses_seed2028_embeddings.csv
@@ -10,9 +10,9 @@ EXPORT TOP-500 RAG RETRIEVAL CANDIDATES
 - Uses:
     FAISS dense index
 - Retrieves:
-    Top-500 nearest POIs per hypothesis embedding
-- Writes (OVERWRITE):
-    rag_seed2028_top500.csv
+    Top-200 nearest POIs per hypothesis embedding
+- Writes:
+    rag_seed2028_top200.csv
 
 Guarantees:
 - deterministic FAISS retrieval
@@ -40,7 +40,7 @@ HYP_JSONL = PROJECT_ROOT  / "results" / "hypothesis_test_eval_1000.jsonl"
 FAISS_INDEX = DATASET_DIR  / "representations" / "poi_text_index.faiss"
 FAISS_META  = DATASET_DIR  / "representations" / "poi_text_meta.jsonl"
 
-OUTPUT_CSV = PROJECT_ROOT  / "results" / "rag_hypothesis_test_eval_1000_top100.csv"
+OUTPUT_CSV = PROJECT_ROOT  / "results" / "rag_hypothesis_test_eval_1000_top200.csv"
 
 # ============================================================
 # CONFIG
